@@ -1,3 +1,30 @@
+<?php 
+  // ここにDBに登録する処理を記述する
+  // 1 DBへの接続
+  $dsn = 'mysql:dbname=myfriends;host=localhost';
+  $user = 'root';
+  $password = '';
+  $dbh = new PDO($dsn, $user, $password);
+  $dbh->query('SET NAMES utf8');
+
+  // 2 GETパラメータを取得
+  $area_id = $_GET['area_id'];
+
+  // 3 SQL文を作成
+  $sql = 'SELECT `area_name` FROM `areas` WHERE `area_id` = ? ';
+  $data[] = $area_id;
+
+  // 4 SQLを実行
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute($data);
+
+  // 都道府県名を取得
+  $area = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+  // DBを切断
+  $dbh = null;
+ ?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -48,7 +75,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 content-margin-top">
-      <legend>北海道の友達</legend>
+      <legend><?php echo $area['area_name']; ?>の友達</legend>
       <div class="well">男性：2名　女性：1名</div>
         <table class="table table-striped table-hover table-condensed">
           <thead>
